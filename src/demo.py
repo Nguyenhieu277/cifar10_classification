@@ -15,7 +15,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = ResNet34()
 try:
 
-    loaded_model = torch.load(os.path.join(os.path.dirname(__file__), "trained_model", "resNET_model.pth"), 
+    loaded_model = torch.load(os.path.join("trained_model", "resNET_model.pth"), 
                             map_location=device,
                             weights_only=False) # If the loaded model is a state dict, load it into our model
     if isinstance(loaded_model, dict):
