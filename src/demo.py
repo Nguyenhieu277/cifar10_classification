@@ -45,12 +45,12 @@ st.title("CIFAR-10 Image Classification")
 st.write("Upload an image to classify it into one of the 10 CIFAR-10 classes.")
 
 
-MAX_FILE_SIZE = 5 * 1024 * 1024 
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     try:
-        
+        # Debug information
         st.write("Debug Info:")
         st.write(f"File name: {uploaded_file.name}")
         st.write(f"File type: {uploaded_file.type}")
@@ -61,54 +61,62 @@ if uploaded_file is not None:
             st.error("File size too large. Please upload an image smaller than 5MB.")
             st.stop()
 
-        
+        # Validate image format
+        if uploaded_file.type not in ["image/jpeg", "image/png"]:
+            st.error("Invalid file format. Please upload a JPEG or PNG image.")
+            st.stop()
+
         try:
-            
+            # Reset file pointer and open image
             uploaded_file.seek(0)
             image = Image.open(uploaded_file)
+            
+            # Additional image validation
+            if image.format not in ["JPEG", "PNG"]:
+                st.error("Invalid image format. Please upload a JPEG or PNG image.")
+                st.stop()
+                
             st.write(f"Image format: {image.format}")
             st.write(f"Image mode: {image.mode}")
             st.write(f"Image size: {image.size}")
-        except Exception as e:
-            st.error(f"Invalid image file: {str(e)}")
-            st.stop()
-
-        
-        if image.mode != 'RGB':
-            image = image.convert('RGB')
             
-        # Display the uploaded image
-        st.image(image, caption='Uploaded Image', use_column_width=True)
-        
-        # Preprocess the image
-        try:
-            image_tensor = transform(image).unsqueeze(0).to(device)
-            st.write("Image preprocessing successful")
-        except Exception as e:
-            st.error(f"Error preprocessing image: {str(e)}")
-            st.stop()
-        
-        
-        try:
-            with torch.no_grad():
-                outputs = model(image_tensor)
-                _, predicted = torch.max(outputs, 1)
-                probability = torch.nn.functional.softmax(outputs, dim=1)[0]
+            # Convert to RGB if necessary
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
                 
+            # Display the uploaded image
+            st.image(image, caption='Uploaded Image', use_column_width=True)
             
-            st.write(f"Predicted class: {classes[predicted.item()]}")
+            # Preprocess the image
+            try:
+                image_tensor = transform(image).unsqueeze(0).to(device)
+                st.write("Image preprocessing successful")
+            except Exception as e:
+                st.error(f"Error preprocessing image: {str(e)}")
+                st.stop()
             
-            
-            st.write("Confidence scores:")
-            for i, prob in enumerate(probability):
-                st.write(f"{classes[i]}: {prob.item():.2%}")
+            # Make prediction
+            try:
+                with torch.no_grad():
+                    outputs = model(image_tensor)
+                    _, predicted = torch.max(outputs, 1)
+                    probability = torch.nn.functional.softmax(outputs, dim=1)[0]
+                
+                st.write(f"Predicted class: {classes[predicted.item()]}")
+                
+                st.write("Confidence scores:")
+                for i, prob in enumerate(probability):
+                    st.write(f"{classes[i]}: {prob.item():.2%}")
+            except Exception as e:
+                st.error(f"Error making prediction: {str(e)}")
+                st.stop()
+                
         except Exception as e:
-            st.error(f"Error making prediction: {str(e)}")
+            st.error(f"Error processing image: {str(e)}")
             st.stop()
             
     except Exception as e:
         st.error(f"An unexpected error occurred: {str(e)}")
         st.write("Please try uploading a different image.")
-        
         st.write("Full error traceback:")
         st.write(str(sys.exc_info()))
