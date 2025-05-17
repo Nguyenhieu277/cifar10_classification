@@ -60,7 +60,7 @@ cifar10/
 │   ├── demo.py           # Streamlit application
 │   ├── resNet34.py  
 │   ├── MLP.ipynb
-│   ├── ResNet.ipynb    # ResNet34 model implementation
+│   ├── ResNet.ipynb    
 ├── trained_model/
 │   └── resNET_model.pth  # Trained model weights
 ├── requirements.txt      # Project dependencies
