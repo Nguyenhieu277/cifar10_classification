@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 import numpy as np
 from resNet34 import ResNet34, ResNet, BasicBlock
-
+import os
 import sys
 
 # Add ResNet to safe globals
@@ -15,7 +15,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = ResNet34()
 try:
 
-    loaded_model = torch.load(r"D:\work\cifar10\trained_model\resNET_model.pth", 
+    loaded_model = torch.load(os.path.join(os.path.dirname(__file__), "trained_model", "resNET_model.pth"), 
                             map_location=device,
                             weights_only=False) # If the loaded model is a state dict, load it into our model
     if isinstance(loaded_model, dict):
