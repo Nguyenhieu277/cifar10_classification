@@ -58,7 +58,9 @@ pip install -r requirements.txt
 cifar10/
 ├── src/
 │   ├── demo.py           # Streamlit application
-│   └── resNet34.py       # ResNet34 model implementation
+│   ├── resNet34.py  
+│   ├── MLP.ipynb
+│   ├── ResNet.ipynb    # ResNet34 model implementation
 ├── trained_model/
 │   └── resNET_model.pth  # Trained model weights
 ├── requirements.txt      # Project dependencies
