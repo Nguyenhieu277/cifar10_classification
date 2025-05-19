@@ -13,19 +13,23 @@ torch.serialization.add_safe_globals([ResNet, BasicBlock])
 # Initialize model and load weights
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = ResNet34()
-try:
 
-    loaded_model = torch.load(r"src\trained_model\resNET_model.pth", 
+# Get the absolute path to the model file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(current_dir, "trained_model", "resNET_model.pth")
+
+try:
+    loaded_model = torch.load(model_path, 
                             map_location=device,
                             weights_only=False) # If the loaded model is a state dict, load it into our model
     if isinstance(loaded_model, dict):
         model.load_state_dict(loaded_model)
     else:
-        
         model = loaded_model
     model.eval()
 except Exception as e:
     st.error(f"Error loading model: {str(e)}")
+    st.error(f"Attempted to load model from: {model_path}")
     st.stop()
 
 
