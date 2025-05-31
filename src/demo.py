@@ -21,7 +21,7 @@ model_path = os.path.join(current_dir, "trained_model", "resNET_model.pth")
 try:
     loaded_model = torch.load(model_path, 
                             map_location=device,
-                            weights_only=False) # If the loaded model is a state dict, load it into our model
+                            weights_only=False)
     if isinstance(loaded_model, dict):
         model.load_state_dict(loaded_model)
     else:
@@ -49,12 +49,12 @@ st.title("CIFAR-10 Image Classification")
 st.write("Upload an image to classify it into one of the 10 CIFAR-10 classes.")
 
 
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+MAX_FILE_SIZE = 5 * 1024 * 1024
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     try:
-        # Debug information
+        
         st.write("Debug Info:")
         st.write(f"File name: {uploaded_file.name}")
         st.write(f"File type: {uploaded_file.type}")
